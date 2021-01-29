@@ -1,26 +1,56 @@
 const CustomError = require("../extensions/custom-error");
 
 const chainMaker = {
+  chainRepr: "",
+  length: 0,
   getLength() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    return this.length;
   },
   addLink(value) {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    this.length++;
+
+    if (this.length == 0) {
+      this.chainRepr += `( ${value} )~~`;
+    } else {
+      this.chainRepr += `( ${value} )~~`;
+    }
+
+    return this;
   },
   removeLink(position) {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    if (position < 1 || position > this.length || typeof position != "number") {
+      this.restartChain();
+      throw "Error";
+    }
+
+    if (this.length == 1) {
+      this.chainRepr = "";
+      return this;
+    }
+
+    let splittedChain = this.chainRepr.split("~~");
+    splittedChain.splice(position - 1, 1);
+    this.chainRepr = splittedChain.join("~~");
+
+    return this;
   },
   reverseChain() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    let splittedChain = this.chainRepr.split("~~").reverse();
+    splittedChain.shift();
+    splittedChain.push("");
+    this.chainRepr = splittedChain.join("~~");
+    return this;
   },
   finishChain() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
-  }
+    this.chainRepr = this.chainRepr.substring(0, this.chainRepr.length - 2);
+    let returnChain = this.chainRepr;
+    this.restartChain();
+    return returnChain;
+  },
+  restartChain() {
+    this.chainRepr = "";
+    this.length = 0;
+  },
 };
 
 module.exports = chainMaker;
